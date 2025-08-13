@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>DLD Unit 1 Exam</title>
+     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+     <style>
+          body {
+
+               margin: 0;
+               display: flex;
+               background: #f5f6fa;
+               height: 100vh;
+               font-family: 'Segoe UI', Tahoma, sans-serif;
+          }
+
+
+          .sidebar {
+               width: 150px;
+               background: #f4f4f4;
+               padding: 10px;
+               border-right: 1px solid #ccc;
+               overflow-y: auto;
+          }
+
+          .sidebar h2 {
+               font-size: 16px;
+               margin-bottom: 10px;
+               text-align: center;
+          }
+
+          .qbtn {
+               width: 40px;
+               height: 40px;
+               border-radius: 50%;
+               border: none;
+               margin: 5px;
+               background: #ddd;
+               cursor: pointer;
+          }
+
+          .qbtn.answered {
+               background: #4CAF50;
+               color: white;
+          }
+
+          .main {
+               flex: 1;
+               display: flex;
+               flex-direction: column;
+               padding: 20px;
+          }
+
+          .exam-title {
+               text-align: center;
+               font-size: 20px;
+               margin-bottom: 15px;
+               font-weight: bold;
+               color: #2c3e50;
+          }
+
+          .question-card {
+               flex: 1;
+          }
+
+          .options label {
+               display: block;
+               padding: 8px;
+               border: 1px solid #ccc;
+               margin: 5px 0;
+               cursor: pointer;
+          }
+
+          .footer {
+               border-top: 1px solid #73d4d5;
+               padding: 10px;
+               display: flex;
+               justify-content: space-between;
+               background-color: #8de1e2;
+          }
+
+          button {
+               padding: 10px 15px;
+               cursor: pointer;
+          }
+
+          #timer {
+               font-weight: bold;
+               font-size: 18px;
+               text-align: center;
+               margin-top: 20px;
+               color: #2c3e50;
+          }
+
+          button {
+               padding: 8px 15px;
+               margin-top: 10px;
+          }
+
+          .footer-button {
+               background-color: #d0d3d3;
+               border-radius: 12px;
+          }
+
+          .left-footer {
+               color: var(--muted)
+          }
+     </style>
+</head>
+
+<body>
+
+     <div class="sidebar">
+          <h2>Questions</h2>
+          <div id="qgrid"></div>
+     </div>
+
+     <div class="main">
+          <div class="exam-title">MCQ Exam — Digital Logic Design Unit 1</div>
+          <div id="timer" style="font-weight:bold; font-size:18px; text-align:right; margin-bottom:10px;">
+               Time Left: 03:00:00
+          </div>
+          <div class="question-card">
+               <div>
+                    <h3 id="qtitle"></h3>
+               </div>
+               <div>
+                    <p id="qtext"></p>
+               </div>
+               <div class="options" id="options"></div>
+          </div>
+          <div class="footer">
+               <div class="left-footer">Tip: click a number to jump to that question</div>
+               <button class="footer-button" onclick="prevQ()">Previous</button>
+               <button class="footer-button" onclick="nextQ()">Next</button>
+               <button class="footer-button" onclick="submitExam()">Submit</button>
+
+
+
+          </div>
+     </div>
+
+     <script>
+          const questions = [
+               { q: "Binary of decimal 5 is:", opts: ["110", "101", "1001", "111"], ans: 1 },
+               { q: "Decimal of binary 1011 is:", opts: ["9", "10", "11", "12"], ans: 2 },
+               { q: "Octal of binary 110 is:", opts: ["4", "5", "6", "7"], ans: 2 },
+               { q: "Binary of octal 7 is:", opts: ["100", "111", "110", "101"], ans: 1 },
+               { q: "Hex of binary 1010 is:", opts: ["A", "B", "C", "D"], ans: 0 },
+               { q: "Decimal of hex A is:", opts: ["8", "9", "10", "11"], ans: 2 },
+               { q: "Binary of decimal 32 is:", opts: ["10000", "100000", "11000", "10100"], ans: 1 },
+               { q: "Decimal of binary 110 is:", opts: ["5", "6", "7", "8"], ans: 1 },
+               { q: "Hex of decimal 255 is:", opts: ["EE", "FE", "FF", "F0"], ans: 2 },
+               { q: "Decimal of hex 1A is:", opts: ["24", "25", "26", "27"], ans: 2 },
+               { q: "1 + 1 (binary) =", opts: ["1", "10", "11", "0"], ans: 1 },
+               { q: "Binary addition of 101 + 11 =", opts: ["111", "1000", "110", "1010"], ans: 1 },
+               { q: "Binary subtraction of 101 - 1 =", opts: ["11", "10", "100", "101"], ans: 2 },
+               { q: "Binary multiplication of 10 x 10 =", opts: ["10", "100", "110", "101"], ans: 1 },
+               { q: "1's complement of 1010 =", opts: ["0101", "1010", "1111", "0000"], ans: 0 },
+               { q: "2's complement of 0101 =", opts: ["1011", "0101", "1111", "0001"], ans: 0 },
+               { q: "In 8-bit 2's complement, -5 is:", opts: ["11111011", "11111010", "11110101", "10111011"], ans: 0 },
+               { q: "Binary division of 100 / 10 =", opts: ["1", "10", "11", "100"], ans: 1 },
+               { q: "0 - 0 (binary) =", opts: ["0", "1", "10", "11"], ans: 0 },
+               { q: "1 - 0 (binary) =", opts: ["0", "1", "10", "11"], ans: 1 },
+               { q: "AND gate output is 1 only if:", opts: ["Both inputs are 1", "Any input is 1", "Both inputs are 0", "Any input is 0"], ans: 0 },
+               { q: "OR gate output is 0 only if:", opts: ["Any input is 0", "All inputs are 0", "Any input is 1", "All inputs are 1"], ans: 1 },
+               { q: "NOT gate output is:", opts: ["Same as input", "Always 0", "Opposite of input", "Always 1"], ans: 2 },
+               { q: "NAND gate is equivalent to:", opts: ["NOT+AND", "NOT+OR", "AND+OR", "OR+XOR"], ans: 0 },
+               { q: "NOR gate is equivalent to:", opts: ["NOT+AND", "NOT+OR", "AND+OR", "OR+XOR"], ans: 1 }
+          ];
+
+          let currentQ = 0;
+          let userAnswers = Array(questions.length).fill(null);
+
+          const qtitle = document.getElementById("qtitle");
+          const qtext = document.getElementById("qtext");
+          const optionsDiv = document.getElementById("options");
+          const qgrid = document.getElementById("qgrid");
+
+          function loadSidebar() {
+               qgrid.innerHTML = "";
+               for (let i = 0; i < questions.length; i++) {
+                    const btn = document.createElement("button");
+                    btn.textContent = i + 1;
+                    btn.className = "qbtn";
+                    if (userAnswers[i] !== null) btn.classList.add("answered");
+                    btn.onclick = () => { currentQ = i; loadQuestion(); };
+                    qgrid.appendChild(btn);
+               }
+          }
+
+          function loadQuestion() {
+               qtitle.textContent = `Question ${currentQ + 1}`;
+               qtext.textContent = questions[currentQ].q;
+               optionsDiv.innerHTML = "";
+               questions[currentQ].opts.forEach((opt, idx) => {
+                    const label = document.createElement("label");
+                    const input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = "qopt";
+                    input.value = idx;
+                    if (userAnswers[currentQ] === idx) input.checked = true;
+                    input.onchange = () => {
+                         userAnswers[currentQ] = idx;
+                         loadSidebar();
+                    };
+                    label.appendChild(input);
+                    label.append(` ${opt}`);
+                    optionsDiv.appendChild(label);
+               });
+          }
+
+          function nextQ() {
+               if (currentQ < questions.length - 1) {
+                    currentQ++;
+                    loadQuestion();
+               }
+          }
+          function prevQ() {
+               if (currentQ > 0) {
+                    currentQ--;
+                    loadQuestion();
+               }
+          }
+
+          function submitExam() {
+               let score = 0;
+               questions.forEach((q, i) => {
+                    if (userAnswers[i] === q.ans) score++;
+               });
+               alert(`You scored ${score} out of ${questions.length}`);
+          }
+
+          loadSidebar();
+          loadQuestion();
+          let totalSeconds = 3 * 60 * 60;
+
+          function startTimer() {
+               const timerEl = document.getElementById('timer');
+               const timerInterval = setInterval(() => {
+                    let hours = Math.floor(totalSeconds / 3600);
+                    let minutes = Math.floor((totalSeconds % 3600) / 60);
+                    let seconds = totalSeconds % 60;
+
+                    // Format
+                    hours = hours < 10 ? "0" + hours : hours;
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    timerEl.textContent = `Time Left: ${hours}:${minutes}:${seconds}`;
+
+                    if (totalSeconds <= 0) {
+                         clearInterval(timerInterval);
+                         alert("Time's up! Submitting your answers...");
+                    }
+                    totalSeconds--;
+               }, 1000);
+          }
+
+          startTimer();
+
+     </script>
+
+</body>
+
+</html>
