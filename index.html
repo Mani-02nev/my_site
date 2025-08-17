@@ -65,11 +65,14 @@
                     background-color: #E0E0E0;
                     color: #2C2C2C;
                     transition: 0.3s;
+                    box-shadow: 0 0 8px #861cffad;
                }
 
                .qbtn:hover {
                     box-shadow: 0 0 6px #2F81F7;
-                    transform: scale(1.05);
+                    transform: scale(1.1);
+                    background-color: #2f82f7b1;
+                    border-color: #2F81F7;
                }
 
                .qbtn.answered {
@@ -211,6 +214,15 @@
                     color: #f5f5f5;
                }
 
+               body.dark h3 {
+                    color: white;
+               }
+
+               body.dark .sidebar h2 {
+                    color: #ffffff;
+
+               }
+
                body.dark .sidebar {
                     background: #000000;
                     color: #ffffff;
@@ -221,6 +233,13 @@
                     background-color: #333;
                     border: 1px solid #555;
                     color: #f5f5f5;
+               }
+
+               body.dark .qbtn:hover {
+                    box-shadow: 0 0 6px #2F81F7;
+                    transform: scale(1.1);
+                    background-color: #2f82f7b1;
+                    border-color: #2F81F7;
                }
 
                body.dark .qbtn.answered {
