@@ -62,7 +62,7 @@
                     border: 1px solid #ccc;
                     margin: 5px;
                     cursor: pointer;
-                    background-color: #E0E0E0;
+                    background-color: #f0efefc5;
                     color: #2C2C2C;
                     transition: 0.3s;
                     box-shadow: 0 0 8px #00000063;
@@ -70,9 +70,10 @@
 
                .qbtn:hover {
                     box-shadow: 0 0 6px #2F81F7;
-                    transform: scale(1.1);
-                    background-color: #2f82f7b1;
+                    transform: scale(1.2);
+                    background-color: #2f82f7d6;
                     border-color: #2F81F7;
+                    color: white;
                }
 
                .qbtn.answered {
@@ -163,25 +164,58 @@
                     flex-wrap: wrap;
                }
 
+               /* Group buttons to right side */
+               .footer .button-group {
+                    margin-left: auto;
+                    /* pushes to the right */
+                    display: flex;
+                    gap: 10px;
+               }
+
+
                #timer {
-                    background: #2563eb;
-                    color: white;
+                    margin-top: 490px;
+                    color: rgb(255, 0, 0);
                     padding: 10px 16px;
                     border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 16px;
-                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+                    font-size: 17px;
+                    text-align: right;
                }
+
+               .footer {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 20px;
+                    padding-top: 15px;
+                    border-top: 1px solid #ddd;
+                    gap: 15px;
+                    flex-wrap: wrap;
+
+               }
+
+               /* Group buttons to right side */
+               .footer .button-group {
+                    margin-left: auto;
+                    /* pushes to the right */
+                    display: flex;
+                    gap: 10px;
+                    border-radius: 15px;
+
+               }
+
 
                .footer-pre,
                .footer-next,
                .footer-submit {
                     border-radius: 12px;
-                    padding: 10px 18px;
+                    padding: 15px 28px;
                     border: none;
                     cursor: pointer;
                     color: white;
                     transition: 0.3s;
+                    align-items: end;
+
                }
 
                .footer-pre {
@@ -264,7 +298,10 @@
                     color: #f5f5f5;
                }
 
-               /* 📱 Mobile Responsive */
+               body.dark.question-card.timer {
+                    color: white;
+               }
+
                @media (max-width: 768px) {
                     body {
                          flex-direction: column;
@@ -307,7 +344,8 @@
 
                     .footer {
                          flex-direction: column;
-                         gap: 10px;
+                         align-items: self-end;
+
                     }
 
                     #timer {
@@ -321,7 +359,23 @@
 </head>
 
 <body>
-     <button id="themeToggle" class="theme-btn">🌙</button>
+     <div class="cont.toggle">
+          <button id="themeToggle" class="theme-btn">
+               <!-- Moon Icon -->
+               <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="currentColor"
+                    viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
+               </svg>
+               <!-- Sun Icon -->
+               <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="yellow"
+                    stroke="yellow" stroke-width="2" viewBox="0 0 24 24" style="display:none;">
+                    <circle cx="12" cy="12" r="5" />
+                    <path
+                         d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95-6.95l-1.41 1.41M6.46 17.54l-1.41 1.41M17.54 17.54l1.41 1.41M6.46 6.46L5.05 5.05" />
+               </svg>
+          </button>
+     </div>
+
 
      <div class="sidebar">
           <h2>Questions</h2>
@@ -343,69 +397,52 @@
                     <p id="qtext"></p>
                </div>
                <div class="options" id="options"></div>
+               <div class="timer" id="timer">Time Left: 03:00:00</div>
           </div>
           <div class="footer">
                <div class="left-footer">Tip: click a number to jump to that question</div>
-               <button class="footer-pre" onclick="prevQ()">Previous</button>
-               <button class="footer-next" onclick="nextQ()">Next</button>
-               <div id="timer">Time Left: 03:00:00</div>
-               <button class="footer-submit" onclick="submitExam()">Submit</button>
-
+               <div class="button-group">
+                    <button class="footer-pre" onclick="prevQ()">Previous</button>
+                    <button class="footer-next" onclick="nextQ()">Next</button>
+                    <button class="footer-submit" onclick="submitExam()">Submit</button>
+               </div>
           </div>
+
 
      </div>
 
      <script>
           const themeBtn = document.getElementById("themeToggle");
           const body = document.body;
+          const moonIcon = document.getElementById("moonIcon");
+          const sunIcon = document.getElementById("sunIcon");
 
+          // Load saved theme
           if (localStorage.getItem("theme") === "dark") {
                body.classList.add("dark");
-               themeBtn.textContent = "☀️";
+               moonIcon.style.display = "none";
+               sunIcon.style.display = "inline";
           } else {
-               themeBtn.textContent = "🌙";
+               moonIcon.style.display = "inline";
+               sunIcon.style.display = "none";
           }
 
           themeBtn.addEventListener("click", () => {
                body.classList.toggle("dark");
                if (body.classList.contains("dark")) {
-                    themeBtn.textContent = "☀️";
+                    moonIcon.style.display = "none";
+                    sunIcon.style.display = "inline";
                     localStorage.setItem("theme", "dark");
                } else {
-                    themeBtn.textContent = "🌙";
+                    moonIcon.style.display = "inline";
+                    sunIcon.style.display = "none";
                     localStorage.setItem("theme", "light");
                }
           });
 
-          // Your Quiz JS
-          const questions = [
-               { q: "Binary of decimal 5 is:", opts: ["110", "101", "1001", "111"], ans: 1 },
-               { q: "Decimal of binary 1011 is:", opts: ["9", "10", "11", "12"], ans: 2 },
-               { q: "Octal of binary 110 is:", opts: ["4", "5", "6", "7"], ans: 2 },
-               { q: "Binary of octal 7 is:", opts: ["100", "111", "110", "101"], ans: 1 },
-               { q: "Hex of binary 1010 is:", opts: ["A", "B", "C", "D"], ans: 0 },
-               { q: "Decimal of hex A is:", opts: ["8", "9", "10", "11"], ans: 2 },
-               { q: "Binary of decimal 32 is:", opts: ["10000", "100000", "11000", "10100"], ans: 1 },
-               { q: "Decimal of binary 110 is:", opts: ["5", "6", "7", "8"], ans: 1 },
-               { q: "Hex of decimal 255 is:", opts: ["EE", "FE", "FF", "F0"], ans: 2 },
-               { q: "Decimal of hex 1A is:", opts: ["24", "25", "26", "27"], ans: 2 },
-               { q: "1 + 1 (binary) =", opts: ["1", "10", "11", "0"], ans: 1 },
-               { q: "Binary addition of 101 + 11 =", opts: ["111", "1000", "110", "1010"], ans: 1 },
-               { q: "Binary subtraction of 101 - 1 =", opts: ["11", "10", "100", "101"], ans: 2 },
-               { q: "Binary multiplication of 10 x 10 =", opts: ["10", "100", "110", "101"], ans: 1 },
-               { q: "1's complement of 1010 =", opts: ["0101", "1010", "1111", "0000"], ans: 0 },
-               { q: "2's complement of 0101 =", opts: ["1011", "0101", "1111", "0001"], ans: 0 },
-               { q: "In 8-bit 2's complement, -5 is:", opts: ["11111011", "11111010", "11110101", "10111011"], ans: 0 },
-               { q: "Binary division of 100 / 10 =", opts: ["1", "10", "11", "100"], ans: 1 },
-               { q: "0 - 0 (binary) =", opts: ["0", "1", "10", "11"], ans: 0 },
-               { q: "1 - 0 (binary) =", opts: ["0", "1", "10", "11"], ans: 1 },
-               { q: "AND gate output is 1 only if:", opts: ["Both inputs are 1", "Any input is 1", "Both inputs are 0", "Any input is 0"], ans: 0 },
-               { q: "OR gate output is 0 only if:", opts: ["Any input is 0", "All inputs are 0", "Any input is 1", "All inputs are 1"], ans: 1 },
-               { q: "NOT gate output is:", opts: ["Same as input", "Always 0", "Opposite of input", "Always 1"], ans: 2 },
-               { q: "NAND gate is equivalent to:", opts: ["NOT+AND", "NOT+OR", "AND+OR", "OR+XOR"], ans: 0 },
-               { q: "NOR gate is equivalent to:", opts: ["NOT+AND", "NOT+OR", "AND+OR", "OR+XOR"], ans: 1 }
-          ];
 
+          // Your Quiz JS
+          let questions = JSON.parse(localStorage.getItem("examQuestions")) || [];
           let currentQ = 0;
           let userAnswers = Array(questions.length).fill(null);
 

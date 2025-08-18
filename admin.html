@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Question Builder</title>
+     <style>
+          body {
+               font-family: Arial, sans-serif;
+               background: #f4f4f4;
+               padding: 20px;
+               color: #333;
+          }
+
+          h2 {
+               text-align: center;
+          }
+
+          .card {
+               background: #fff;
+               padding: 20px;
+               border-radius: 12px;
+               box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+               max-width: 600px;
+               margin: auto;
+          }
+
+          .form-group {
+               margin-bottom: 15px;
+          }
+
+          label {
+               display: block;
+               margin-bottom: 6px;
+               font-weight: bold;
+          }
+
+          input[type="text"] {
+               width: 100%;
+               padding: 10px;
+               border-radius: 8px;
+               border: 1px solid #ccc;
+          }
+
+          .options input {
+               margin-bottom: 8px;
+          }
+
+          button {
+               padding: 10px 18px;
+               border: none;
+               border-radius: 8px;
+               cursor: pointer;
+               font-weight: bold;
+               margin-right: 10px;
+          }
+
+          .add-btn {
+               background: #2F81F7;
+               color: white;
+          }
+
+          .add-btn:hover {
+               background: #0f5cd7;
+          }
+
+          .finish-btn {
+               background: #28a745;
+               color: white;
+          }
+
+          .finish-btn:hover {
+               background: #1e7e34;
+          }
+
+          textarea {
+               width: 100%;
+               height: 200px;
+               margin-top: 15px;
+               padding: 10px;
+               border-radius: 8px;
+               border: 1px solid #ccc;
+               font-family: monospace;
+          }
+     </style>
+</head>
+
+<body>
+     <h2>MCQ Question Builder</h2>
+     <div class="card">
+          <div class="form-group">
+               <label>Enter Question:</label>
+               <input type="text" id="questionText" placeholder="Type your question here...">
+          </div>
+
+          <div class="form-group">
+               <label>Options:</label>
+               <input type="text" id="opt0" placeholder="Option 1"><br>
+               <input type="text" id="opt1" placeholder="Option 2"><br>
+               <input type="text" id="opt2" placeholder="Option 3"><br>
+               <input type="text" id="opt3" placeholder="Option 4"><br>
+          </div>
+
+          <div class="form-group">
+               <label>Correct Answer (0-3):</label>
+               <input type="text" id="correctAns" placeholder="Enter option index (0-3)">
+          </div>
+
+          <button class="add-btn" onclick="addQuestion()"> Add Question</button>
+          <button class="finish-btn" onclick="saveToExam()"> Save for Exam</button>
+
+     </div>
+
+     <script>
+          let questions = [];
+
+          function addQuestion() {
+               const qText = document.getElementById("questionText").value.trim();
+               const opts = [
+                    document.getElementById("opt0").value.trim(),
+                    document.getElementById("opt1").value.trim(),
+                    document.getElementById("opt2").value.trim(),
+                    document.getElementById("opt3").value.trim()
+               ];
+               const ans = parseInt(document.getElementById("correctAns").value);
+
+               if (!qText || opts.some(o => !o) || isNaN(ans) || ans < 0 || ans > 3) {
+                    alert("⚠️ Please fill all fields and provide a valid correct answer (0-3).");
+                    return;
+               }
+
+               questions.push({ q: qText, opts: opts, ans: ans });
+               alert("Question added!");
+
+               // Reset inputs
+               document.getElementById("questionText").value = "";
+               document.getElementById("opt0").value = "";
+               document.getElementById("opt1").value = "";
+               document.getElementById("opt2").value = "";
+               document.getElementById("opt3").value = "";
+               document.getElementById("correctAns").value = "";
+
+               document.getElementById("output").value = JSON.stringify(questions, null, 2);
+          }
+
+          function saveToExam() {
+               if (questions.length === 0) {
+                    alert("⚠️ Please add at least one question first!");
+                    return;
+               }
+               localStorage.setItem("examQuestions", JSON.stringify(questions));
+               alert("✅ Questions saved! Now open your Exam Site.");
+          }
+     </script>
+</body>
+
+</html>
