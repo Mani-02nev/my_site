@@ -441,11 +441,36 @@
           });
 
 
-          // Your Quiz JS
-          let questions = JSON.parse(localStorage.getItem("examQuestions")) || [];
+
+          let questions = JSON.parse(localStorage.getItem("examQuestions"));
+
+          if (!questions || questions.length === 1) {
+               questions = [
+                    { q: "HTML stands for?", opts: ["Hyper Text Markup Language", "HighText Machine Language", "Hyperlinks and Text Markup Language", "None"], ans: 0 },
+                    { q: "Which tag is used to create a hyperlink in HTML?", opts: ["<a>", "<link>", "<href>", "<hyper>"], ans: 0 },
+                    { q: "Which attribute is used to provide an image source?", opts: ["src", "href", "alt", "link"], ans: 0 },
+                    { q: "Which tag is used to display the largest heading?", opts: ["<heading>", "<h6>", "<h1>", "<head>"], ans: 2 },
+                    { q: "Which tag is used to insert a line break?", opts: ["<break>", "<br>", "<lb>", "<line>"], ans: 1 },
+                    { q: "Which HTML element is used for inserting a background color?", opts: ["<background>", "<body bgcolor>", "<bgcolor>", "<color>"], ans: 1 },
+                    { q: "What is the correct HTML tag for inserting a paragraph?", opts: ["<para>", "<p>", "<pg>", "<paragraph>"], ans: 1 },
+                    { q: "Which tag is used for inserting an image?", opts: ["<image>", "<img>", "<src>", "<pic>"], ans: 1 },
+                    { q: "HTML comments start with?", opts: ["// comment", "<!-- comment -->", "# comment", "/* comment */"], ans: 1 },
+                    { q: "Which attribute is used to open a link in a new tab?", opts: ["target='_blank'", "newtab", "open='_new'", "tab=new"], ans: 0 },
+                    { q: "Which tag is used for unordered lists?", opts: ["<ol>", "<list>", "<ul>", "<li>"], ans: 2 },
+                    { q: "Which tag is used for ordered lists?", opts: ["<ul>", "<ol>", "<li>", "<order>"], ans: 1 },
+                    { q: "Which tag creates a checkbox?", opts: ["<checkbox>", "<check>", "<input type='checkbox'>", "<box>"], ans: 2 },
+                    { q: "Which tag creates a radio button?", opts: ["<radio>", "<option>", "<input type='radio'>", "<rd>"], ans: 2 },
+                    { q: "Which HTML element defines the title of a document?", opts: ["<head>", "<meta>", "<title>", "<header>"], ans: 2 },
+                    { q: "Which tag is used for bold text?", opts: ["<strong>", "<b>", "<bold>", "Both A & B"], ans: 3 },
+                    { q: "Which tag is used for italic text?", opts: ["<i>", "<italic>", "<em>", "Both A & C"], ans: 3 },
+                    { q: "Which tag defines a table row?", opts: ["<td>", "<tr>", "<row>", "<th>"], ans: 1 },
+                    { q: "Which tag defines a table cell?", opts: ["<td>", "<tr>", "<th>", "<cell>"], ans: 0 },
+                    { q: "Which tag defines a table heading?", opts: ["<td>", "<tr>", "<th>", "<thead>"], ans: 2 }
+               ];
+          }
+
           let currentQ = 0;
           let userAnswers = Array(questions.length).fill(null);
-
           const qtitle = document.getElementById("qtitle");
           const qtext = document.getElementById("qtext");
           const optionsDiv = document.getElementById("options");

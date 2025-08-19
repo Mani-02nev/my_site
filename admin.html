@@ -4,26 +4,32 @@
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Question Builder</title>
+     <title>Admin - Question Builder</title>
      <style>
           body {
-               font-family: Arial, sans-serif;
-               background: #f4f4f4;
-               padding: 20px;
-               color: #333;
+               font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+               background: linear-gradient(135deg, #7a9ecf, #59569a);
+               padding: 0;
+               margin: 0;
+               min-height: 100vh;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+          }
+
+          .container {
+               background: #fff;
+               padding: 25px;
+               border-radius: 15px;
+               box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+               max-width: 700px;
+               width: 100%;
           }
 
           h2 {
                text-align: center;
-          }
-
-          .card {
-               background: #fff;
-               padding: 20px;
-               border-radius: 12px;
-               box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-               max-width: 600px;
-               margin: auto;
+               margin-bottom: 20px;
+               color: #2F81F7;
           }
 
           .form-group {
@@ -34,6 +40,7 @@
                display: block;
                margin-bottom: 6px;
                font-weight: bold;
+               color: #444;
           }
 
           input[type="text"] {
@@ -41,19 +48,32 @@
                padding: 10px;
                border-radius: 8px;
                border: 1px solid #ccc;
+               transition: border 0.3s;
+          }
+
+          input[type="text"]:focus {
+               border: 1px solid #2F81F7;
+               outline: none;
+               box-shadow: 0 0 5px rgba(47, 129, 247, 0.5);
           }
 
           .options input {
                margin-bottom: 8px;
           }
 
+          .btn-group {
+               text-align: center;
+               margin-top: 20px;
+          }
+
           button {
-               padding: 10px 18px;
+               padding: 12px 20px;
                border: none;
-               border-radius: 8px;
+               border-radius: 10px;
                cursor: pointer;
                font-weight: bold;
-               margin-right: 10px;
+               margin: 10px;
+               transition: 0.3s;
           }
 
           .add-btn {
@@ -73,33 +93,23 @@
           .finish-btn:hover {
                background: #1e7e34;
           }
-
-          textarea {
-               width: 100%;
-               height: 200px;
-               margin-top: 15px;
-               padding: 10px;
-               border-radius: 8px;
-               border: 1px solid #ccc;
-               font-family: monospace;
-          }
      </style>
 </head>
 
 <body>
-     <h2>MCQ Question Builder</h2>
-     <div class="card">
+     <div class="container">
+          <h2>🛠 Admin - Question Builder</h2>
           <div class="form-group">
                <label>Enter Question:</label>
                <input type="text" id="questionText" placeholder="Type your question here...">
           </div>
 
-          <div class="form-group">
+          <div class="form-group options">
                <label>Options:</label>
-               <input type="text" id="opt0" placeholder="Option 1"><br>
-               <input type="text" id="opt1" placeholder="Option 2"><br>
-               <input type="text" id="opt2" placeholder="Option 3"><br>
-               <input type="text" id="opt3" placeholder="Option 4"><br>
+               <input type="text" id="opt0" placeholder="Option 1">
+               <input type="text" id="opt1" placeholder="Option 2">
+               <input type="text" id="opt2" placeholder="Option 3">
+               <input type="text" id="opt3" placeholder="Option 4">
           </div>
 
           <div class="form-group">
@@ -107,8 +117,11 @@
                <input type="text" id="correctAns" placeholder="Enter option index (0-3)">
           </div>
 
-          <button class="add-btn" onclick="addQuestion()"> Add Question</button>
-          <button class="finish-btn" onclick="saveToExam()"> Save for Exam</button>
+          <div class="btn-group">
+               <button class="add-btn" onclick="addQuestion()"> Add Question</button>
+               <button class="finish-btn" onclick="saveToExam()"> Save for Exam</button>
+          </div>
+
 
      </div>
 
@@ -131,7 +144,7 @@
                }
 
                questions.push({ q: qText, opts: opts, ans: ans });
-               alert("Question added!");
+               alert("✅ Question added!");
 
                // Reset inputs
                document.getElementById("questionText").value = "";
