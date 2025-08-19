@@ -444,7 +444,7 @@
 
           let questions = JSON.parse(localStorage.getItem("examQuestions"));
 
-          if (!questions || questions.length >1) {
+          if (!questions || questions.length <2)  {
                questions = [
                     { q: "HTML stands for?", opts: ["Hyper Text Markup Language", "HighText Machine Language", "Hyperlinks and Text Markup Language", "None"], ans: 0 },
                     { q: "Which tag is used to create a hyperlink in HTML?", opts: ["<a>", "<link>", "<href>", "<hyper>"], ans: 0 },
