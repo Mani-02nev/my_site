@@ -9,12 +9,9 @@
           body {
                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                background: linear-gradient(135deg, #7a9ecf, #59569a);
-               padding: 0;
+               padding: 20px;
                margin: 0;
                min-height: 100vh;
-               display: flex;
-               justify-content: center;
-               align-items: center;
           }
 
           .container {
@@ -24,6 +21,7 @@
                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
                max-width: 700px;
                width: 100%;
+               margin: auto;
           }
 
           h2 {
@@ -44,7 +42,7 @@
           }
 
           input[type="text"] {
-               width: 100%;
+               width: calc(100% - 22px); /* Adjust width for padding and border */
                padding: 10px;
                border-radius: 8px;
                border: 1px solid #ccc;
@@ -93,6 +91,41 @@
           .finish-btn:hover {
                background: #1e7e34;
           }
+
+          /* --- NEW STYLES for the question list --- */
+          #questionList {
+               margin-top: 25px;
+               border-top: 1px solid #eee;
+               padding-top: 15px;
+          }
+
+          .question-item {
+               background-color: #f9f9f9;
+               border: 1px solid #ddd;
+               border-radius: 8px;
+               padding: 15px;
+               margin-bottom: 10px;
+               display: flex;
+               justify-content: space-between;
+               align-items: center;
+          }
+          
+          .question-item p {
+              margin: 0;
+              flex-grow: 1;
+          }
+
+          .remove-btn {
+               background: #dc3545;
+               color: white;
+               padding: 8px 12px;
+               border-radius: 6px;
+               margin-left: 15px;
+          }
+
+          .remove-btn:hover {
+               background: #c82333;
+          }
      </style>
 </head>
 
@@ -118,13 +151,52 @@
           </div>
 
           <div class="btn-group">
-               <button class="add-btn" onclick="addQuestion()"> Add Question</button>
-               <button class="finish-btn" onclick="saveToExam()"> Save for Exam</button>
+               <button class="add-btn" onclick="addQuestion()">Add Question</button>
+               <button class="finish-btn" onclick="saveToExam()">Save for Exam</button>
           </div>
+
+          <div id="questionList"></div>
+
      </div>
 
      <script>
           let questions = [];
+
+          // --- NEW FUNCTION to display the list of questions ---
+          function renderQuestions() {
+               const listDiv = document.getElementById("questionList");
+               listDiv.innerHTML = ""; // Clear the list first
+
+               if (questions.length === 0) {
+                    listDiv.innerHTML = "<p style='text-align:center; color: #888;'>No questions added yet.</p>";
+                    return;
+               }
+
+               questions.forEach((q, index) => {
+                    const item = document.createElement("div");
+                    item.className = "question-item";
+                    
+                    // Display the question text
+                    const questionText = document.createElement("p");
+                    questionText.textContent = `${index + 1}. ${q.q}`;
+                    
+                    // Create a remove button
+                    const removeBtn = document.createElement("button");
+                    removeBtn.textContent = "Remove";
+                    removeBtn.className = "remove-btn";
+                    removeBtn.onclick = () => deleteQuestion(index);
+
+                    item.appendChild(questionText);
+                    item.appendChild(removeBtn);
+                    listDiv.appendChild(item);
+               });
+          }
+
+          // --- NEW FUNCTION to delete a specific question ---
+          function deleteQuestion(index) {
+               questions.splice(index, 1); // Removes the question at the specified index
+               renderQuestions(); // Update the displayed list
+          }
 
           function addQuestion() {
                const qText = document.getElementById("questionText").value.trim();
@@ -142,8 +214,7 @@
                }
 
                questions.push({ q: qText, opts: opts, ans: ans });
-               alert("✅ Question added!");
-
+               
                // Reset inputs
                document.getElementById("questionText").value = "";
                document.getElementById("opt0").value = "";
@@ -152,8 +223,7 @@
                document.getElementById("opt3").value = "";
                document.getElementById("correctAns").value = "";
 
-               // This line was removed as the 'output' element does not exist in the HTML.
-               // document.getElementById("output").value = JSON.stringify(questions, null, 2); 
+               renderQuestions(); // --- UPDATE: Refresh the list after adding a question
           }
 
           function saveToExam() {
@@ -162,8 +232,11 @@
                     return;
                }
                localStorage.setItem("examQuestions", JSON.stringify(questions));
-               alert("✅ Questions saved! Now open your Exam Site.");
+               alert(`✅ ${questions.length} question(s) saved! Now open your Exam Site.`);
           }
+          
+          // Initial render to show the "No questions" message
+          renderQuestions();
      </script>
 </body>
 
