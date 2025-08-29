@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 
 <head>
      <meta charset="UTF-8">
@@ -330,6 +330,224 @@
                     .question-card {
                          padding: 15px;
                          font-size: medium;
+                    }
+
+                    .options {
+                         flex-direction: column;
+                         align-items: flex-start;
+                    }
+
+                    .options label {
+                         width: 100%;
+                         text-align: center;
+                    }
+
+                    .footer {
+                         flex-direction: column;
+                         align-items: self-end;
+
+                    }
+
+                    #timer {
+                         width: 100%;
+                         text-align: center;
+                    }
+               }
+          </style>
+     </head>
+
+</head>
+
+<body>
+     <div class="cont.toggle">
+          <button id="themeToggle" class="theme-btn">
+               <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="currentColor"
+                    viewBox="0 0 24 24">
+                    <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
+               </svg>
+               <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="yellow"
+                    stroke="yellow" stroke-width="2" viewBox="0 0 24 24" style="display:none;">
+                    <circle cx="12" cy="12" r="5" />
+                    <path
+                         d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95-6.95l-1.41 1.41M6.46 17.54l-1.41 1.41M17.54 17.54l1.41 1.41M6.46 6.46L5.05 5.05" />
+               </svg>
+          </button>
+     </div>
+
+
+     <div class="sidebar">
+          <h2>Questions</h2>
+          <div id="qgrid"></div>
+     </div>
+
+     <div class="main">
+          <center>
+               <div class="exam-title">
+                    <h3>MCQ Exam — WEB Design Unit 1</h3>
+               </div>
+          </center>
+
+          <div class="question-card">
+               <div>
+                    <h3 id="qtitle"></h3>
+               </div>
+               <div>
+                    <p id="qtext"></p>
+               </div>
+               <div class="options" id="options"></div>
+               <div class="timer" id="timer">Time Left: 03:00:00</div>
+          </div>
+          <div class="footer">
+               <div class="left-footer">Tip: click a number to jump to that question</div>
+               <div class="button-group">
+                    <button class="footer-pre" onclick="prevQ()">Previous</button>
+                    <button class="footer-next" onclick="nextQ()">Next</button>
+                    <button class="footer-submit" onclick="submitExam()">Submit</button>
+               </div>
+          </div>
+
+
+     </div>
+
+     <script>
+          const themeBtn = document.getElementById("themeToggle");
+          const body = document.body;
+          const moonIcon = document.getElementById("moonIcon");
+          const sunIcon = document.getElementById("sunIcon");
+
+          // Load saved theme
+          if (localStorage.getItem("theme") === "dark") {
+               body.classList.add("dark");
+               moonIcon.style.display = "none";
+               sunIcon.style.display = "inline";
+          } else {
+               moonIcon.style.display = "inline";
+               sunIcon.style.display = "none";
+          }
+
+          themeBtn.addEventListener("click", () => {
+               body.classList.toggle("dark");
+               if (body.classList.contains("dark")) {
+                    moonIcon.style.display = "none";
+                    sunIcon.style.display = "inline";
+                    localStorage.setItem("theme", "dark");
+               } else {
+                    moonIcon.style.display = "inline";
+                    sunIcon.style.display = "none";
+                    localStorage.setItem("theme", "light");
+               }
+          });
+
+
+
+          let questions = JSON.parse(localStorage.getItem("examQuestions"));
+
+          // --- FIX ---
+          // The condition was changed from 'questions.length < 2' to 'questions.length === 0'.
+          // This ensures that if the admin adds even one question, it will be used for the exam.
+          if (!questions || questions.length === 0) {
+               questions = [
+                    { q: "HTML stands for?", opts: ["Hyper Text Markup Language", "HighText Machine Language", "Hyperlinks and Text Markup Language", "None"], ans: 0 },
+                    { q: "Which tag is used to create a hyperlink in HTML?", opts: ["<a>", "<link>", "<href>", "<hyper>"], ans: 0 },
+                    { q: "Which attribute is used to provide an image source?", opts: ["src", "href", "alt", "link"], ans: 0 },
+                    { q: "Which tag is used to display the largest heading?", opts: ["<heading>", "<h6>", "<h1>", "<head>"], ans: 2 },
+                    { q: "Which tag is used to insert a line break?", opts: ["<break>", "<br>", "<lb>", "<line>"], ans: 1 },
+                    { q: "Which HTML element is used for inserting a background color?", opts: ["<background>", "<body bgcolor>", "<bgcolor>", "<color>"], ans: 1 },
+                    { q: "What is the correct HTML tag for inserting a paragraph?", opts: ["<para>", "<p>", "<pg>", "<paragraph>"], ans: 1 },
+                    { q: "Which tag is used for inserting an image?", opts: ["<image>", "<img>", "<src>", "<pic>"], ans: 1 },
+                    { q: "HTML comments start with?", opts: ["// comment", "", "# comment", "/* comment */"], ans: 1 },
+                    { q: "Which attribute is used to open a link in a new tab?", opts: ["target='_blank'", "newtab", "open='_new'", "tab=new"], ans: 0 },
+                    { q: "Which tag is used for unordered lists?", opts: ["<ol>", "<list>", "<ul>", "<li>"], ans: 2 },
+                    { q: "Which tag is used for ordered lists?", opts: ["<ul>", "<ol>", "<li>", "<order>"], ans: 1 },
+                    { q: "Which tag creates a checkbox?", opts: ["<checkbox>", "<check>", "<input type='checkbox'>", "<box>"], ans: 2 },
+                    { q: "Which tag creates a radio button?", opts: ["<radio>", "<option>", "<input type='radio'>", "<rd>"], ans: 2 },
+                    { q: "Which HTML element defines the title of a document?", opts: ["<head>", "<meta>", "<title>", "<header>"], ans: 2 },
+                    { q: "Which tag is used for bold text?", opts: ["<strong>", "<b>", "<bold>", "Both A & B"], ans: 3 },
+                    { q: "Which tag is used for italic text?", opts: ["<i>", "<italic>", "<em>", "Both A & C"], ans: 3 },
+                    { q: "Which tag defines a table row?", opts: ["<td>", "<tr>", "<row>", "<th>"], ans: 1 },
+                    { q: "Which tag defines a table cell?", opts: ["<td>", "<tr>", "<th>", "<cell>"], ans: 0 },
+                    { q: "Which tag defines a table heading?", opts: ["<td>", "<tr>", "<th>", "<thead>"], ans: 2 }
+               ];
+          }
+
+          let currentQ = 0;
+          let userAnswers = Array(questions.length).fill(null);
+          const qtitle = document.getElementById("qtitle");
+          const qtext = document.getElementById("qtext");
+          const optionsDiv = document.getElementById("options");
+          const qgrid = document.getElementById("qgrid");
+
+          function loadSidebar() {
+               qgrid.innerHTML = "";
+               for (let i = 0; i < questions.length; i++) {
+                    const btn = document.createElement("button");
+                    btn.textContent = i + 1;
+                    btn.className = "qbtn";
+                    if (userAnswers[i] !== null) btn.classList.add("answered");
+                    btn.onclick = () => { currentQ = i; loadQuestion(); };
+                    qgrid.appendChild(btn);
+               }
+          }
+
+          function loadQuestion() {
+               qtitle.textContent = `Question ${currentQ + 1}`;
+               qtext.textContent = questions[currentQ].q;
+               optionsDiv.innerHTML = "";
+               questions[currentQ].opts.forEach((opt, idx) => {
+                    const label = document.createElement("label");
+                    const input = document.createElement("input");
+                    input.type = "radio";
+                    input.className = "input"
+                    input.name = "qopt";
+                    input.value = idx;
+                    if (userAnswers[currentQ] === idx) input.checked = true;
+                    input.onchange = () => {
+                         userAnswers[currentQ] = idx;
+                         loadSidebar();
+                    };
+                    optionsDiv.appendChild(input);
+                    label.textContent = opt;
+                    label.setAttribute("for", "opt" + idx);
+                    input.id = "opt" + idx;
+                    optionsDiv.appendChild(label);
+               });
+          }
+
+          function nextQ() {
+               if (currentQ < questions.length - 1) {
+                    currentQ++;
+                    loadQuestion();
+               }
+          }
+          function prevQ() {
+               if (currentQ > 0) {
+                    currentQ--;
+                    loadQuestion();
+               }
+          }
+
+          function submitExam() {
+               let score = 0;
+               questions.forEach((q, i) => {
+                    if (userAnswers[i] === q.ans) score++;
+               });
+               alert(`You scored ${score} out of ${questions.length}`);
+          }
+
+          loadSidebar();
+          loadQuestion();
+          let totalSeconds = 3 * 60 * 60;
+
+          function startTimer() {
+               const timerEl = document.getElementById('timer');
+               const timerInterval = setInterval(() => {
+                    let hours = Math.floor(totalSeconds / 3600);
+                    let minutes = Math.floor((totalSeconds % 3600) / 60);
+                    let seconds = totalSeconds % 60;
+
+                    hours = hours < 10 ? "0" + hours : hours;
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" +             font-size: medium;
                     }
 
                     .options {
