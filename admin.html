@@ -5,171 +5,51 @@
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Admin - Question Builder</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
      <style>
           body {
                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                background: linear-gradient(135deg, #7a9ecf, #59569a);
-               padding: 20px;
-               margin: 0;
+               padding: 20px 0;
                min-height: 100vh;
-          }
-
-          .container {
-               background: #fff;
-               padding: 25px;
-               border-radius: 15px;
-               box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-               max-width: 700px;
-               width: 100%;
-               margin: auto;
-          }
-
-          h2 {
-               text-align: center;
-               margin-bottom: 20px;
-               color: #2F81F7;
-          }
-
-          .form-group {
-               margin-bottom: 15px;
-          }
-
-          label {
-               display: block;
-               margin-bottom: 6px;
-               font-weight: bold;
-               color: #444;
-          }
-
-          input[type="text"] {
-               width: calc(100% - 22px);
-               padding: 10px;
-               border-radius: 8px;
-               border: 1px solid #ccc;
-               transition: border 0.3s;
-          }
-
-          input[type="text"]:focus {
-               border: 1px solid #2F81F7;
-               outline: none;
-               box-shadow: 0 0 5px rgba(47, 129, 247, 0.5);
-          }
-
-          .options input {
-               margin-bottom: 8px;
-          }
-
-          .btn-group {
-               text-align: center;
-               margin-top: 20px;
-               display: flex;
-               justify-content: center;
-               flex-wrap: wrap;
-          }
-
-          button {
-               padding: 12px 20px;
-               border: none;
-               border-radius: 10px;
-               cursor: pointer;
-               font-weight: bold;
-               margin: 5px;
-               transition: 0.3s;
-          }
-
-          .add-btn {
-               background: #2F81F7;
-               color: white;
-          }
-
-          .add-btn:hover {
-               background: #0f5cd7;
-          }
-
-          .finish-btn {
-               background: #28a745;
-               color: white;
-          }
-
-          .finish-btn:hover {
-               background: #1e7e34;
-          }
-          
-          /* --- NEW BUTTON STYLE --- */
-          .reset-btn {
-              background: #ffc107;
-              color: #212529;
-          }
-
-          .reset-btn:hover {
-              background: #e0a800;
-          }
-
-          #questionList {
-               margin-top: 25px;
-               border-top: 1px solid #eee;
-               padding-top: 15px;
-          }
-
-          .question-item {
-               background-color: #f9f9f9;
-               border: 1px solid #ddd;
-               border-radius: 8px;
-               padding: 15px;
-               margin-bottom: 10px;
-               display: flex;
-               justify-content: space-between;
-               align-items: center;
-          }
-
-          .question-item p {
-               margin: 0;
-               flex-grow: 1;
-          }
-
-          .remove-btn {
-               background: #dc3545;
-               color: white;
-               padding: 8px 12px;
-               border-radius: 6px;
-               margin-left: 15px;
-          }
-
-          .remove-btn:hover {
-               background: #c82333;
           }
      </style>
 </head>
 
 <body>
      <div class="container">
-          <h2>🛠 Admin - Question Builder</h2>
-          <div class="form-group">
-               <label>Enter Question:</label>
-               <input type="text" id="questionText" placeholder="Type your question here...">
+          <div class="card shadow-lg">
+               <div class="card-body p-4">
+                    <h2 class="card-title text-center text-primary mb-4">🛠 Admin - Question Builder</h2>
+                    <div class="mb-3">
+                         <label for="questionText" class="form-label fw-bold">Enter Question:</label>
+                         <input type="text" id="questionText" class="form-control" placeholder="Type your question here...">
+                    </div>
+
+                    <div class="mb-3">
+                         <label class="form-label fw-bold">Options:</label>
+                         <input type="text" id="opt0" class="form-control mb-2" placeholder="Option 1">
+                         <input type="text" id="opt1" class="form-control mb-2" placeholder="Option 2">
+                         <input type="text" id="opt2" class="form-control mb-2" placeholder="Option 3">
+                         <input type="text" id="opt3" class="form-control" placeholder="Option 4">
+                    </div>
+
+                    <div class="mb-3">
+                         <label for="correctAns" class="form-label fw-bold">Correct Answer (Index 0-3):</label>
+                         <input type="text" id="correctAns" class="form-control" placeholder="Enter option index (e.g., 0, 1, 2, or 3)">
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                         <button class="btn btn-primary" onclick="addQuestion()">Add Question</button>
+                         <button class="btn btn-success" onclick="saveToExam()">Save for Exam</button>
+                         <button class="btn btn-warning" onclick="resetExam()">Reset Exam to Default</button>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div id="questionList"></div>
+               </div>
           </div>
-
-          <div class="form-group options">
-               <label>Options:</label>
-               <input type="text" id="opt0" placeholder="Option 1">
-               <input type="text" id="opt1" placeholder="Option 2">
-               <input type="text" id="opt2" placeholder="Option 3">
-               <input type="text" id="opt3" placeholder="Option 4">
-          </div>
-
-          <div class="form-group">
-               <label>Correct Answer (0-3):</label>
-               <input type="text" id="correctAns" placeholder="Enter option index (0-3)">
-          </div>
-
-          <div class="btn-group">
-               <button class="add-btn" onclick="addQuestion()">Add Question</button>
-               <button class="finish-btn" onclick="saveToExam()">Save for Exam</button>
-               <button class="reset-btn" onclick="resetExam()">Reset Exam to Default</button>
-          </div>
-
-          <div id="questionList"></div>
-
      </div>
 
      <script>
@@ -180,26 +60,28 @@
                listDiv.innerHTML = "";
 
                if (questions.length === 0) {
-                    listDiv.innerHTML = "<p style='text-align:center; color: #888;'>No questions added yet.</p>";
+                    listDiv.innerHTML = "<p class='text-center text-muted'>No questions added yet.</p>";
                     return;
                }
 
+               const listGroup = document.createElement("ul");
+               listGroup.className = "list-group";
+
                questions.forEach((q, index) => {
-                    const item = document.createElement("div");
-                    item.className = "question-item";
+                    const item = document.createElement("li");
+                    item.className = "list-group-item d-flex justify-content-between align-items-center";
                     
-                    const questionText = document.createElement("p");
-                    questionText.textContent = `${index + 1}. ${q.q}`;
+                    item.textContent = `${index + 1}. ${q.q}`;
                     
                     const removeBtn = document.createElement("button");
                     removeBtn.textContent = "Remove";
-                    removeBtn.className = "remove-btn";
+                    removeBtn.className = "btn btn-danger btn-sm";
                     removeBtn.onclick = () => deleteQuestion(index);
 
-                    item.appendChild(questionText);
                     item.appendChild(removeBtn);
-                    listDiv.appendChild(item);
+                    listGroup.appendChild(item);
                });
+               listDiv.appendChild(listGroup);
           }
 
           function deleteQuestion(index) {
@@ -243,7 +125,6 @@
                alert(`✅ ${questions.length} question(s) saved! Now open your Exam Site.`);
           }
           
-          // --- NEW FUNCTION for the Reset Button ---
           function resetExam() {
                if (confirm("Are you sure you want to delete all saved questions and reset the exam to its default state?")) {
                     localStorage.removeItem("examQuestions");
@@ -253,6 +134,7 @@
 
           renderQuestions();
      </script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
