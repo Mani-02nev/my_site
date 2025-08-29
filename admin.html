@@ -42,7 +42,7 @@
           }
 
           input[type="text"] {
-               width: calc(100% - 22px); /* Adjust width for padding and border */
+               width: calc(100% - 22px);
                padding: 10px;
                border-radius: 8px;
                border: 1px solid #ccc;
@@ -62,6 +62,9 @@
           .btn-group {
                text-align: center;
                margin-top: 20px;
+               display: flex;
+               justify-content: center;
+               flex-wrap: wrap;
           }
 
           button {
@@ -70,7 +73,7 @@
                border-radius: 10px;
                cursor: pointer;
                font-weight: bold;
-               margin: 10px;
+               margin: 5px;
                transition: 0.3s;
           }
 
@@ -91,8 +94,17 @@
           .finish-btn:hover {
                background: #1e7e34;
           }
+          
+          /* --- NEW BUTTON STYLE --- */
+          .reset-btn {
+              background: #ffc107;
+              color: #212529;
+          }
 
-          /* --- NEW STYLES for the question list --- */
+          .reset-btn:hover {
+              background: #e0a800;
+          }
+
           #questionList {
                margin-top: 25px;
                border-top: 1px solid #eee;
@@ -109,10 +121,10 @@
                justify-content: space-between;
                align-items: center;
           }
-          
+
           .question-item p {
-              margin: 0;
-              flex-grow: 1;
+               margin: 0;
+               flex-grow: 1;
           }
 
           .remove-btn {
@@ -153,6 +165,7 @@
           <div class="btn-group">
                <button class="add-btn" onclick="addQuestion()">Add Question</button>
                <button class="finish-btn" onclick="saveToExam()">Save for Exam</button>
+               <button class="reset-btn" onclick="resetExam()">Reset Exam to Default</button>
           </div>
 
           <div id="questionList"></div>
@@ -162,10 +175,9 @@
      <script>
           let questions = [];
 
-          // --- NEW FUNCTION to display the list of questions ---
           function renderQuestions() {
                const listDiv = document.getElementById("questionList");
-               listDiv.innerHTML = ""; // Clear the list first
+               listDiv.innerHTML = "";
 
                if (questions.length === 0) {
                     listDiv.innerHTML = "<p style='text-align:center; color: #888;'>No questions added yet.</p>";
@@ -176,11 +188,9 @@
                     const item = document.createElement("div");
                     item.className = "question-item";
                     
-                    // Display the question text
                     const questionText = document.createElement("p");
                     questionText.textContent = `${index + 1}. ${q.q}`;
                     
-                    // Create a remove button
                     const removeBtn = document.createElement("button");
                     removeBtn.textContent = "Remove";
                     removeBtn.className = "remove-btn";
@@ -192,10 +202,9 @@
                });
           }
 
-          // --- NEW FUNCTION to delete a specific question ---
           function deleteQuestion(index) {
-               questions.splice(index, 1); // Removes the question at the specified index
-               renderQuestions(); // Update the displayed list
+               questions.splice(index, 1);
+               renderQuestions();
           }
 
           function addQuestion() {
@@ -215,7 +224,6 @@
 
                questions.push({ q: qText, opts: opts, ans: ans });
                
-               // Reset inputs
                document.getElementById("questionText").value = "";
                document.getElementById("opt0").value = "";
                document.getElementById("opt1").value = "";
@@ -223,7 +231,7 @@
                document.getElementById("opt3").value = "";
                document.getElementById("correctAns").value = "";
 
-               renderQuestions(); // --- UPDATE: Refresh the list after adding a question
+               renderQuestions();
           }
 
           function saveToExam() {
@@ -235,7 +243,14 @@
                alert(`✅ ${questions.length} question(s) saved! Now open your Exam Site.`);
           }
           
-          // Initial render to show the "No questions" message
+          // --- NEW FUNCTION for the Reset Button ---
+          function resetExam() {
+               if (confirm("Are you sure you want to delete all saved questions and reset the exam to its default state?")) {
+                    localStorage.removeItem("examQuestions");
+                    alert("✅ Exam has been reset to default questions. The custom questions have been deleted.");
+               }
+          }
+
           renderQuestions();
      </script>
 </body>
