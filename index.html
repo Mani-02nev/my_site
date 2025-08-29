@@ -17,7 +17,6 @@
                font-size: larger;
           }
 
-          /* 🌙 Theme Toggle Button */
           .theme-btn {
                position: fixed;
                top: 15px;
@@ -29,7 +28,6 @@
                z-index: 1000;
           }
 
-          /* Sidebar */
           .sidebar {
                width: 150px;
                background: #FFFFFF;
@@ -46,7 +44,6 @@
                color: #333;
           }
 
-          /* Question buttons */
           .qbtn {
                width: 40px;
                height: 40px;
@@ -79,7 +76,6 @@
                box-shadow: 0 0 6px #2F81F7;
           }
 
-          /* Main Content */
           .main {
                flex: 1;
                display: flex;
@@ -96,7 +92,6 @@
                color: #000000;
           }
 
-          /* Options */
           .options input[type="radio"] {
                display: none;
           }
@@ -156,14 +151,11 @@
                flex-wrap: wrap;
           }
 
-          /* Group buttons to right side */
           .footer .button-group {
                margin-left: auto;
-               /* pushes to the right */
                display: flex;
                gap: 10px;
           }
-
 
           #timer {
                margin-top: 490px;
@@ -174,28 +166,12 @@
                text-align: right;
           }
 
-          .footer {
-               display: flex;
-               justify-content: space-between;
-               align-items: center;
-               margin-top: 20px;
-               padding-top: 15px;
-               border-top: 1px solid #ddd;
-               gap: 15px;
-               flex-wrap: wrap;
-
-          }
-
-          /* Group buttons to right side */
           .footer .button-group {
                margin-left: auto;
-               /* pushes to the right */
                display: flex;
                gap: 10px;
                border-radius: 15px;
-
           }
-
 
           .footer-pre,
           .footer-next,
@@ -207,7 +183,6 @@
                color: white;
                transition: 0.3s;
                align-items: end;
-
           }
 
           .footer-pre {
@@ -234,7 +209,6 @@
                background-color: #8e5bd9;
           }
 
-          /* 🌙 DARK THEME */
           body.dark {
                background: #121212;
                color: #f5f5f5;
@@ -246,7 +220,6 @@
 
           body.dark .sidebar h2 {
                color: #ffffff;
-
           }
 
           body.dark .sidebar {
@@ -288,10 +261,6 @@
           body.dark .footer {
                border-top: 1px solid #444;
                color: #f5f5f5;
-          }
-
-          body.dark.question-card.timer {
-               color: white;
           }
 
           @media (max-width: 768px) {
@@ -337,7 +306,6 @@
                .footer {
                     flex-direction: column;
                     align-items: self-end;
-
                }
 
                #timer {
@@ -403,7 +371,6 @@
           const moonIcon = document.getElementById("moonIcon");
           const sunIcon = document.getElementById("sunIcon");
 
-          // Load saved theme
           if (localStorage.getItem("theme") === "dark") {
                body.classList.add("dark");
                moonIcon.style.display = "none";
@@ -426,113 +393,114 @@
                }
           });
 
+          // --- UPDATED LOGIC ---
+          // Try to load questions from localStorage.
+          let questions = JSON.parse(localStorage.getItem("examQuestions"));
 
-          // --- CHANGE ---
-          // Load questions from localStorage. If null (no questions saved), default to an empty array.
-          let questions = JSON.parse(localStorage.getItem("examQuestions")) || [];
-
-          // Check if there are any questions. If not, display a message.
-          if (questions.length === 0) {
-               document.querySelector('.main').innerHTML = `
-            <div style="text-align: center; padding: 50px;">
-                <h2>No Exam Questions Found</h2>
-                <p>Please contact the administrator to set up the exam questions.</p>
-            </div>`;
-               document.querySelector('.sidebar').style.display = 'none';
-          } else {
-               // If questions exist, run the exam logic.
-               let currentQ = 0;
-               let userAnswers = Array(questions.length).fill(null);
-               const qtitle = document.getElementById("qtitle");
-               const qtext = document.getElementById("qtext");
-               const optionsDiv = document.getElementById("options");
-               const qgrid = document.getElementById("qgrid");
-
-               function loadSidebar() {
-                    qgrid.innerHTML = "";
-                    for (let i = 0; i < questions.length; i++) {
-                         const btn = document.createElement("button");
-                         btn.textContent = i + 1;
-                         btn.className = "qbtn";
-                         if (userAnswers[i] !== null) btn.classList.add("answered");
-                         btn.onclick = () => { currentQ = i; loadQuestion(); };
-                         qgrid.appendChild(btn);
-                    }
-               }
-
-               function loadQuestion() {
-                    qtitle.textContent = `Question ${currentQ + 1}`;
-                    qtext.textContent = questions[currentQ].q;
-                    optionsDiv.innerHTML = "";
-                    questions[currentQ].opts.forEach((opt, idx) => {
-                         const label = document.createElement("label");
-                         const input = document.createElement("input");
-                         input.type = "radio";
-                         input.className = "input"
-                         input.name = "qopt";
-                         input.value = idx;
-                         if (userAnswers[currentQ] === idx) input.checked = true;
-                         input.onchange = () => {
-                              userAnswers[currentQ] = idx;
-                              loadSidebar();
-                         };
-                         optionsDiv.appendChild(input);
-                         label.textContent = opt;
-                         optionsDiv.appendChild(label);
-                    });
-               }
-
-               function nextQ() {
-                    if (currentQ < questions.length - 1) {
-                         currentQ++;
-                         loadQuestion();
-                    }
-               }
-
-               function prevQ() {
-                    if (currentQ > 0) {
-                         currentQ--;
-                         loadQuestion();
-                    }
-               }
-
-               function submitExam() {
-                    let score = 0;
-                    questions.forEach((q, i) => {
-                         if (userAnswers[i] === q.ans) score++;
-                    });
-                    alert(`You scored ${score} out of ${questions.length}`);
-                    // Optional: Redirect or clear session after submit
-                    // window.location.href = "login.html";
-               }
-
-               loadSidebar();
-               loadQuestion();
-               let totalSeconds = 3 * 60 * 60; // 3 hours
-
-               function startTimer() {
-                    const timerEl = document.getElementById('timer');
-                    const timerInterval = setInterval(() => {
-                         let hours = Math.floor(totalSeconds / 3600);
-                         let minutes = Math.floor((totalSeconds % 3600) / 60);
-                         let seconds = totalSeconds % 60;
-
-                         hours = hours < 10 ? "0" + hours : hours;
-                         minutes = minutes < 10 ? "0" + minutes : minutes;
-                         seconds = seconds < 10 ? "0" + seconds : seconds;
-
-                         timerEl.textContent = `Time Left: ${hours}:${minutes}:${seconds}`;
-
-                         if (totalSeconds <= 0) {
-                              clearInterval(timerInterval);
-                              alert("Time's up! Submitting your answers...");
-                              submitExam();
-                         }
-                         totalSeconds--;
-                    }, 1000);
-               }
-               startTimer();
+          // If no custom questions are found, load the default set.
+          if (!questions || questions.length === 0) {
+               questions = [
+                    { q: "HTML stands for?", opts: ["Hyper Text Markup Language", "HighText Machine Language", "Hyperlinks and Text Markup Language", "None"], ans: 0 },
+                    { q: "Which tag is used to create a hyperlink in HTML?", opts: ["<a>", "<link>", "<href>", "<hyper>"], ans: 0 },
+                    { q: "Which attribute is used to provide an image source?", opts: ["src", "href", "alt", "link"], ans: 0 },
+                    { q: "Which tag is used to display the largest heading?", opts: ["<heading>", "<h6>", "<h1>", "<head>"], ans: 2 },
+                    { q: "Which tag is used to insert a line break?", opts: ["<break>", "<br>", "<lb>", "<line>"], ans: 1 },
+                    { q: "What is the correct HTML tag for inserting a paragraph?", opts: ["<para>", "<p>", "<pg>", "<paragraph>"], ans: 1 },
+                    { q: "Which tag is used for inserting an image?", opts: ["<image>", "<img>", "<src>", "<pic>"], ans: 1 },
+                    { q: "HTML comments start with?", opts: ["// comment", "", "# comment", "/* comment */"], ans: 1 },
+                    { q: "Which attribute is used to open a link in a new tab?", opts: ["target='_blank'", "newtab", "open='_new'", "tab=new"], ans: 0 },
+                    { q: "Which tag is used for unordered lists?", opts: ["<ol>", "<list>", "<ul>", "<li>"], ans: 2 },
+               ];
           }
+
+          let currentQ = 0;
+          let userAnswers = Array(questions.length).fill(null);
+          const qtitle = document.getElementById("qtitle");
+          const qtext = document.getElementById("qtext");
+          const optionsDiv = document.getElementById("options");
+          const qgrid = document.getElementById("qgrid");
+
+          function loadSidebar() {
+               qgrid.innerHTML = "";
+               for (let i = 0; i < questions.length; i++) {
+                    const btn = document.createElement("button");
+                    btn.textContent = i + 1;
+                    btn.className = "qbtn";
+                    if (userAnswers[i] !== null) btn.classList.add("answered");
+                    btn.onclick = () => { currentQ = i; loadQuestion(); };
+                    qgrid.appendChild(btn);
+               }
+          }
+
+          function loadQuestion() {
+               qtitle.textContent = `Question ${currentQ + 1}`;
+               qtext.textContent = questions[currentQ].q;
+               optionsDiv.innerHTML = "";
+               questions[currentQ].opts.forEach((opt, idx) => {
+                    const label = document.createElement("label");
+                    const input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = "qopt";
+                    input.value = idx;
+                    if (userAnswers[currentQ] === idx) input.checked = true;
+                    input.onchange = () => {
+                         userAnswers[currentQ] = idx;
+                         loadSidebar();
+                    };
+                    optionsDiv.appendChild(input);
+                    label.textContent = opt;
+                    optionsDiv.appendChild(label);
+               });
+          }
+
+          function nextQ() {
+               if (currentQ < questions.length - 1) {
+                    currentQ++;
+                    loadQuestion();
+               }
+          }
+
+          function prevQ() {
+               if (currentQ > 0) {
+                    currentQ--;
+                    loadQuestion();
+               }
+          }
+
+          function submitExam() {
+               let score = 0;
+               questions.forEach((q, i) => {
+                    if (userAnswers[i] === q.ans) score++;
+               });
+               alert(`You scored ${score} out of ${questions.length}`);
+          }
+
+          loadSidebar();
+          loadQuestion();
+          let totalSeconds = 3 * 60 * 60;
+
+          function startTimer() {
+               const timerEl = document.getElementById('timer');
+               const timerInterval = setInterval(() => {
+                    let hours = Math.floor(totalSeconds / 3600);
+                    let minutes = Math.floor((totalSeconds % 3600) / 60);
+                    let seconds = totalSeconds % 60;
+
+                    hours = hours < 10 ? "0" + hours : hours;
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    timerEl.textContent = `Time Left: ${hours}:${minutes}:${seconds}`;
+
+                    if (totalSeconds <= 0) {
+                         clearInterval(timerInterval);
+                         alert("Time's up! Submitting your answers...");
+                         submitExam();
+                    }
+                    totalSeconds--;
+               }, 1000);
+          }
+          startTimer();
      </script>
 </body>
 
