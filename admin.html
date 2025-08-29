@@ -121,8 +121,6 @@
                <button class="add-btn" onclick="addQuestion()"> Add Question</button>
                <button class="finish-btn" onclick="saveToExam()"> Save for Exam</button>
           </div>
-
-
      </div>
 
      <script>
@@ -154,7 +152,8 @@
                document.getElementById("opt3").value = "";
                document.getElementById("correctAns").value = "";
 
-               document.getElementById("output").value = JSON.stringify(questions, null, 2);
+               // This line was removed as the 'output' element does not exist in the HTML.
+               // document.getElementById("output").value = JSON.stringify(questions, null, 2); 
           }
 
           function saveToExam() {
