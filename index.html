@@ -5,399 +5,126 @@
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>DLD Unit 1 Exam</title>
-     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
      <style>
           body {
-               margin: 0;
-               display: flex;
-               background: #F4F4F4;
-               height: 100vh;
-               font-family: 'Roboto', sans-serif;
-               color: #2C2C2C;
-               font-size: larger;
+               transition: background-color 0.3s, color 0.3s;
           }
 
-          .theme-btn {
-               position: fixed;
-               top: 15px;
-               right: 15px;
-               background: transparent;
-               border: none;
-               font-size: 24px;
-               cursor: pointer;
-               z-index: 1000;
+          .main-content {
+               height: 100vh;
+               display: flex;
+               flex-direction: column;
           }
 
           .sidebar {
-               width: 150px;
-               background: #FFFFFF;
-               padding: 10px;
-               border-right: 1px solid #ddd;
+               height: 100vh;
                overflow-y: auto;
-               color: #2C2C2C;
           }
 
-          .sidebar h2 {
-               font-size: larger;
-               margin-bottom: 10px;
-               text-align: center;
-               color: #333;
+          .question-card {
+               flex-grow: 1;
           }
 
           .qbtn {
                width: 40px;
                height: 40px;
-               border-radius: 50%;
-               border: 1px solid #ccc;
-               margin: 5px;
-               cursor: pointer;
-               background-color: #f0efefc5;
-               color: #2C2C2C;
-               transition: 0.3s;
-               box-shadow: 0 0 8px #00000063;
           }
-
-          .qbtn:hover {
-               box-shadow: 0 0 6px #2F81F7;
-               transform: scale(1.2);
-               background-color: #2f82f7d6;
-               border-color: #2F81F7;
-               color: white;
-          }
-
-          .qbtn.answered {
-               background: #4CAF50;
-               color: white;
-          }
-
-          .qbtn.active {
-               background: #2F81F7;
-               color: #fff;
-               box-shadow: 0 0 6px #2F81F7;
-          }
-
-          .main {
-               flex: 1;
-               display: flex;
-               flex-direction: column;
-               padding: 20px;
-               color: #2C2C2C;
-          }
-
-          .exam-title {
-               text-align: center;
-               font-size: x-large;
-               margin-bottom: 15px;
-               font-weight: bold;
-               color: #000000;
-          }
-
-          .options input[type="radio"] {
-               display: none;
-          }
-
-          .options {
-               display: flex;
-               gap: 12px;
-               flex-wrap: wrap;
-          }
-
-          .options label {
-               display: inline-block;
-               padding: 12px 20px;
-               border: 1px solid #ddd;
-               border-radius: 12px;
-               font-size: 16px;
-               font-weight: 500;
-               color: #333;
-               background: #fafafa;
-               cursor: pointer;
-               transition: 0.3s;
-               white-space: nowrap;
-               flex: 0 0 auto;
-          }
-
-          .options label:hover {
-               border-color: #2f82f7a1;
-               transform: scale(1.1);
-          }
-
-          .options input[type="radio"]:checked+label {
-               background: #2F81F7;
-               color: white;
-               border-color: #2F81F7;
-          }
-
-          .question-card {
-               flex: 1;
-               display: flex;
-               flex-direction: column;
-               background-color: #FFFFFF;
-               color: #2C2C2C;
-               padding: 25px;
-               border-radius: 20px;
-               border: 1px solid #ddd;
-               box-shadow: 0 0 10px rgba(0, 0, 0, 0.842);
-          }
-
-          .footer {
-               display: flex;
-               justify-content: space-between;
-               align-items: center;
-               margin-top: 20px;
-               padding-top: 15px;
-               border-top: 1px solid #ddd;
-               gap: 15px;
-               flex-wrap: wrap;
-          }
-
-          .footer .button-group {
-               margin-left: auto;
-               display: flex;
-               gap: 10px;
-          }
-
-          #timer {
-               margin-top: 490px;
-               color: rgb(255, 0, 0);
-               padding: 10px 16px;
-               border-radius: 8px;
-               font-size: 17px;
-               text-align: right;
-          }
-
-          .footer .button-group {
-               margin-left: auto;
-               display: flex;
-               gap: 10px;
-               border-radius: 15px;
-          }
-
-          .footer-pre,
-          .footer-next,
-          .footer-submit {
-               border-radius: 12px;
-               padding: 15px 28px;
-               border: none;
-               cursor: pointer;
-               color: white;
-               transition: 0.3s;
-               align-items: end;
-          }
-
-          .footer-pre {
-               background-color: #1a7f8c;
-          }
-
-          .footer-pre:hover {
-               background-color: #15909f;
-          }
-
-          .footer-next {
-               background-color: #11a311;
-          }
-
-          .footer-next:hover {
-               background-color: #0fc10f;
-          }
-
-          .footer-submit {
-               background-color: #A371F7;
-          }
-
-          .footer-submit:hover {
-               background-color: #8e5bd9;
-          }
-
-          body.dark {
-               background: #121212;
-               color: #f5f5f5;
-          }
-
-          body.dark h3 {
-               color: white;
-          }
-
-          body.dark .sidebar h2 {
-               color: #ffffff;
-          }
-
-          body.dark .sidebar {
-               background: #000000;
-               color: #ffffff;
-               border-right: 1px solid #444;
-          }
-
-          body.dark .qbtn {
-               background-color: #333;
-               border: 1px solid #555;
-               color: #f5f5f5;
-          }
-
-          body.dark .qbtn:hover {
-               box-shadow: 0 0 6px #2F81F7;
-               transform: scale(1.1);
-               background-color: #2f82f7b1;
-               border-color: #2F81F7;
-          }
-
-          body.dark .qbtn.answered {
-               background: #00ff6a;
-          }
-
-          body.dark .question-card {
-               background: #1e1e1e;
-               border-color: #444;
-               color: #f5f5f5;
-               box-shadow: 0 0 10px rgba(0, 255, 170, 0.4);
-          }
-
-          body.dark .options label {
-               background: #2a2a2a;
-               color: #f5f5f5;
-               border: 1px solid #555;
-          }
-
-          body.dark .footer {
-               border-top: 1px solid #444;
-               color: #f5f5f5;
+          
+          /* Custom styling for radio buttons */
+          .btn-check:checked+.btn-outline-primary {
+              background-color: #0d6efd;
+              color: white;
           }
 
           @media (max-width: 768px) {
-               body {
-                    flex-direction: column;
-                    height: auto;
-               }
-
                .sidebar {
-                    width: 100%;
-                    border-right: none;
-                    border-bottom: 1px solid #ddd;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    padding: 10px 0;
+                    height: auto;
+                    max-height: 200px;
                }
-
-               .qbtn {
-                    width: 35px;
-                    height: 35px;
-               }
-
-               .main {
-                    padding: 10px;
-               }
-
-               .question-card {
-                    padding: 15px;
-                    font-size: medium;
-               }
-
-               .options {
-                    flex-direction: column;
-                    align-items: flex-start;
-               }
-
-               .options label {
-                    width: 100%;
-                    text-align: center;
-               }
-
-               .footer {
-                    flex-direction: column;
-                    align-items: self-end;
-               }
-
-               #timer {
-                    width: 100%;
-                    text-align: center;
+               .main-content {
+                    height: auto;
                }
           }
      </style>
 </head>
 
-<body>
-     <div class="cont.toggle">
-          <button id="themeToggle" class="theme-btn">
-               <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="currentColor"
-                    viewBox="0 0 24 24">
-                    <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
-               </svg>
-               <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="yellow"
-                    stroke="yellow" stroke-width="2" viewBox="0 0 24 24" style="display:none;">
-                    <circle cx="12" cy="12" r="5" />
-                    <path
-                         d="M12 1v2m0 18v2m11-11h-2M3 12H1m16.95-6.95l-1.41 1.41M6.46 17.54l-1.41 1.41M17.54 17.54l1.41 1.41M6.46 6.46L5.05 5.05" />
-               </svg>
-          </button>
-     </div>
+<body data-bs-theme="light">
 
+     <button id="themeToggle" class="btn position-fixed top-0 end-0 m-3 fs-4" style="z-index: 1001;">
+          <i class="bi bi-moon-stars-fill"></i>
+     </button>
 
-     <div class="sidebar">
-          <h2>Questions</h2>
-          <div id="qgrid"></div>
-     </div>
+     <div class="container-fluid">
+          <div class="row">
+               <nav class="col-md-2 d-md-block bg-body-tertiary sidebar border-end">
+                    <div class="position-sticky pt-3">
+                         <h2 class="text-center h4">Questions</h2>
+                         <div id="qgrid" class="d-flex flex-wrap justify-content-center p-2"></div>
+                    </div>
+               </nav>
 
-     <div class="main">
-          <center>
-               <div class="exam-title">
-                    <h3>MCQ Exam — WEB Design Unit 1</h3>
-               </div>
-          </center>
+               <main class="col-md-10 ms-sm-auto px-md-4 main-content">
+                    <div class="text-center pt-3 pb-2 mb-3 border-bottom">
+                         <h1 class="h3">MCQ Exam — WEB Design Unit 1</h1>
+                    </div>
 
-          <div class="question-card">
-               <div>
-                    <h3 id="qtitle"></h3>
-               </div>
-               <div>
-                    <p id="qtext"></p>
-               </div>
-               <div class="options" id="options"></div>
-               <div class="timer" id="timer">Time Left: 03:00:00</div>
-          </div>
-          <div class="footer">
-               <div class="left-footer">Tip: click a number to jump to that question</div>
-               <div class="button-group">
-                    <button class="footer-pre" onclick="prevQ()">Previous</button>
-                    <button class="footer-next" onclick="nextQ()">Next</button>
-                    <button class="footer-submit" onclick="submitExam()">Submit</button>
-               </div>
+                    <div class="card shadow-sm question-card">
+                         <div class="card-body d-flex flex-column">
+                              <h3 id="qtitle" class="card-title"></h3>
+                              <p id="qtext" class="fs-5 mt-2"></p>
+                              <div id="options" class="mt-3"></div>
+                              <div class="mt-auto d-flex justify-content-end align-items-center">
+                                  <div id="timer" class="fw-bold fs-5 text-danger">Time Left: 03:00:00</div>
+                              </div>
+                         </div>
+                    </div>
+                    
+                    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+                        <div class="col-md-4">
+                           <span class="text-body-secondary">Tip: click a number to jump to that question</span>
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center justify-content-end">
+                             <button class="btn btn-secondary me-2" onclick="prevQ()">Previous</button>
+                             <button class="btn btn-primary me-2" onclick="nextQ()">Next</button>
+                             <button class="btn btn-success" onclick="submitExam()">Submit</button>
+                        </div>
+                   </footer>
+               </main>
           </div>
      </div>
 
      <script>
           const themeBtn = document.getElementById("themeToggle");
           const body = document.body;
-          const moonIcon = document.getElementById("moonIcon");
-          const sunIcon = document.getElementById("sunIcon");
+          const themeIcon = themeBtn.querySelector("i");
 
-          if (localStorage.getItem("theme") === "dark") {
-               body.classList.add("dark");
-               moonIcon.style.display = "none";
-               sunIcon.style.display = "inline";
-          } else {
-               moonIcon.style.display = "inline";
-               sunIcon.style.display = "none";
+          function setTheme(theme) {
+               document.documentElement.setAttribute('data-bs-theme', theme);
+               if (theme === 'dark') {
+                    themeIcon.classList.remove('bi-moon-stars-fill');
+                    themeIcon.classList.add('bi-sun-fill');
+               } else {
+                    themeIcon.classList.remove('bi-sun-fill');
+                    themeIcon.classList.add('bi-moon-stars-fill');
+               }
+               localStorage.setItem("theme", theme);
           }
 
           themeBtn.addEventListener("click", () => {
-               body.classList.toggle("dark");
-               if (body.classList.contains("dark")) {
-                    moonIcon.style.display = "none";
-                    sunIcon.style.display = "inline";
-                    localStorage.setItem("theme", "dark");
-               } else {
-                    moonIcon.style.display = "inline";
-                    sunIcon.style.display = "none";
-                    localStorage.setItem("theme", "light");
-               }
+               const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+               setTheme(currentTheme === 'dark' ? 'light' : 'dark');
           });
 
-          // --- UPDATED LOGIC ---
-          // Try to load questions from localStorage.
+          // Set initial theme
+          const savedTheme = localStorage.getItem("theme") || 'light';
+          setTheme(savedTheme);
+
+
+          // --- Exam Logic (Updated with Bootstrap classes) ---
           let questions = JSON.parse(localStorage.getItem("examQuestions"));
 
-          // If no custom questions are found, load the default set.
           if (!questions || questions.length === 0) {
                questions = [
                     { q: "HTML stands for?", opts: ["Hyper Text Markup Language", "HighText Machine Language", "Hyperlinks and Text Markup Language", "None"], ans: 0 },
@@ -425,32 +152,52 @@
                for (let i = 0; i < questions.length; i++) {
                     const btn = document.createElement("button");
                     btn.textContent = i + 1;
-                    btn.className = "qbtn";
-                    if (userAnswers[i] !== null) btn.classList.add("answered");
+                    let btnClass = 'btn qbtn m-1 ';
+                    if (i === currentQ) {
+                        btnClass += 'btn-primary'; // Active question
+                    } else if (userAnswers[i] !== null) {
+                        btnClass += 'btn-success'; // Answered question
+                    } else {
+                        btnClass += 'btn-outline-secondary'; // Not answered
+                    }
+                    btn.className = btnClass;
                     btn.onclick = () => { currentQ = i; loadQuestion(); };
                     qgrid.appendChild(btn);
                }
           }
 
           function loadQuestion() {
-               qtitle.textContent = `Question ${currentQ + 1}`;
+               qtitle.textContent = `Question ${currentQ + 1} of ${questions.length}`;
                qtext.textContent = questions[currentQ].q;
                optionsDiv.innerHTML = "";
+               
+               const optionsGroup = document.createElement('div');
+               optionsGroup.className = 'list-group';
+               
                questions[currentQ].opts.forEach((opt, idx) => {
-                    const label = document.createElement("label");
                     const input = document.createElement("input");
                     input.type = "radio";
+                    input.className = "btn-check";
                     input.name = "qopt";
+                    input.id = `opt${idx}`;
                     input.value = idx;
+                    input.autocomplete = "off";
                     if (userAnswers[currentQ] === idx) input.checked = true;
+                    
                     input.onchange = () => {
                          userAnswers[currentQ] = idx;
                          loadSidebar();
                     };
-                    optionsDiv.appendChild(input);
+
+                    const label = document.createElement("label");
+                    label.className = "btn btn-outline-primary w-100 my-1 text-start";
+                    label.setAttribute("for", `opt${idx}`);
                     label.textContent = opt;
+
+                    optionsDiv.appendChild(input);
                     optionsDiv.appendChild(label);
                });
+               loadSidebar();
           }
 
           function nextQ() {
@@ -475,20 +222,20 @@
                alert(`You scored ${score} out of ${questions.length}`);
           }
 
-          loadSidebar();
           loadQuestion();
           let totalSeconds = 3 * 60 * 60;
 
           function startTimer() {
                const timerEl = document.getElementById('timer');
                const timerInterval = setInterval(() => {
+                    totalSeconds--;
                     let hours = Math.floor(totalSeconds / 3600);
                     let minutes = Math.floor((totalSeconds % 3600) / 60);
                     let seconds = totalSeconds % 60;
 
-                    hours = hours < 10 ? "0" + hours : hours;
-                    minutes = minutes < 10 ? "0" + minutes : minutes;
-                    seconds = seconds < 10 ? "0" + seconds : seconds;
+                    hours = String(hours).padStart(2, '0');
+                    minutes = String(minutes).padStart(2, '0');
+                    seconds = String(seconds).padStart(2, '0');
 
                     timerEl.textContent = `Time Left: ${hours}:${minutes}:${seconds}`;
 
@@ -497,11 +244,11 @@
                          alert("Time's up! Submitting your answers...");
                          submitExam();
                     }
-                    totalSeconds--;
                }, 1000);
           }
           startTimer();
      </script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
